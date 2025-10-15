@@ -37,7 +37,6 @@ It provides an API for creating and managing short links, and includes a user au
 
     ```bash
     git clone https://github.com/AlShabiliBadia/Shorter-links.git
-    cd https://github.com/AlShabiliBadia/Shorter-links.git
     ```
 
 2.  **Create and activate a virtual environment:**
