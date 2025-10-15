@@ -36,8 +36,8 @@ It provides an API for creating and managing short links, and includes a user au
 1.  **Clone the repository:**
 
     ```bash
-    git clone <your-repository-url>
-    cd <repository-folder>
+    git clone https://github.com/AlShabiliBadia/Shorter-links.git
+    cd https://github.com/AlShabiliBadia/Shorter-links.git
     ```
 
 2.  **Create and activate a virtual environment:**
