@@ -1,6 +1,9 @@
+from typing import Optional
+from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from . import models, utils
+from sqlalchemy.exc import IntegrityError
+from . import models, utils, schemas, password_utils
 
 async def get_url_by_short_code(db: AsyncSession, short_code: str):
     result = await db.execute(
@@ -8,20 +11,52 @@ async def get_url_by_short_code(db: AsyncSession, short_code: str):
     )
     return result.scalars().first()
 
+async def get_user_by_email(db: AsyncSession, email: str):
+    result = await db.execute(
+        select(models.User).filter(models.User.email == email)
+    )
+    return result.scalars().first()
+
+
+async def get_user_by_id(db: AsyncSession, user_id: int):
+    result = await db.execute(
+        select(models.User).filter(models.User.id == user_id)
+    )
+    return result.scalars().first()
+
+
+
+
 async def increment_clicks(db: AsyncSession, db_url: models.URL):
     db_url.clicks += 1
-    await db.commit()
-    await db.refresh(db_url)
-    return db_url
 
-async def create_db_url(db: AsyncSession, target_url: str) -> models.URL:
-    while True:
+
+async def create_db_url(db: AsyncSession, target_url: str, owner_id: Optional[int] = None) -> models.URL:
+    for _ in range(5):
         short_code = utils.generate_short_code()
-        if not await get_url_by_short_code(db, short_code):
-            break
+        db_url = models.URL(
+            target_url=target_url, 
+            short_code=short_code,
+            owned_by=owner_id
+        )
+        db.add(db_url)
+        try:
+            await db.commit()
+            await db.refresh(db_url)
+            return db_url
+        except IntegrityError:
+            await db.rollback()
+    raise HTTPException(status_code=500, detail="Could not generate a unique short code.")
+
+
+async def create_db_user(db: AsyncSession, user: schemas.UserAccount) -> models.User:
+    hashed_password = password_utils.hash_password(user.password)
     
-    db_url = models.URL(target_url=target_url, short_code=short_code)
-    db.add(db_url)
-    await db.commit()
-    await db.refresh(db_url)
-    return db_url
+    db_user = models.User(
+        username=user.username, 
+        email=user.email, 
+        password=hashed_password
+    )
+    db.add(db_user)
+
+    return db_user
