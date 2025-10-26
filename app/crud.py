@@ -24,7 +24,13 @@ async def get_user_by_id(db: AsyncSession, user_id: int):
     )
     return result.scalars().first()
 
-
+async def get_url_by_short_code_and_lock(db: AsyncSession, short_code: str):
+    result = await db.execute(
+        select(models.URL)
+        .filter(models.URL.short_code == short_code)
+        .with_for_update()
+    )
+    return result.scalars().first()
 
 
 async def increment_clicks(db: AsyncSession, db_url: models.URL):
