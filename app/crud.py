@@ -66,3 +66,7 @@ async def create_db_user(db: AsyncSession, user: schemas.UserAccount) -> models.
     db.add(db_user)
 
     return db_user
+
+async def delete_db_user(db: AsyncSession, user: models.User):
+    await db.delete(user)
+    await db.commit()
