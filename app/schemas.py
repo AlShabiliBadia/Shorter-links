@@ -7,7 +7,7 @@ class URLCreate(BaseModel):
 
 
 class URLInfo(BaseModel):
-    id: int = Field(alias='url_id') 
+    id: int
     target_url: HttpUrl
     short_url: str
     clicks: int

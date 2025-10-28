@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app import models
 
 from .. import crud, schemas, password_utils, jwt_utils
-from ..dependencies import get_db, get_current_user
+from ..dependencies import get_db, get_current_active_user
 
 router = APIRouter()
 
@@ -42,7 +42,7 @@ async def login(login_info: schemas.UserLogin, db: AsyncSession = Depends(get_db
 
 @router.delete("/account/delete", status_code=status.HTTP_200_OK)
 async def delete_account(
-    current_user: models.User = Depends(get_current_user),
+    current_user: models.User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db)
 ):
     await crud.delete_db_user(db=db, user=current_user)
