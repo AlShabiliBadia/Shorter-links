@@ -69,7 +69,7 @@ async def get_num_clicks(
         )
 
     return {
-        "target": db_url.target_url,
+        "target_url": db_url.target_url,
         "short_code": db_url.short_code,
         "clicks": db_url.clicks,
     }
