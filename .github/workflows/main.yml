@@ -50,9 +50,9 @@ jobs:
           echo "DB_PASSWORD length: ${{ env.DB_PASSWORD_LEN }}"
           echo "DB_NAME length: ${{ env.DB_NAME_LEN }}"
         env:
-          DB_USER_LEN: ${{ a.length(secrets.DB_USER) }}
-          DB_PASSWORD_LEN: ${{ a.length(secrets.DB_PASSWORD) }}
-          DB_NAME_LEN: ${{ a.length(secrets.DB_NAME) }}
+          DB_USER_LEN: ${{ length(secrets.DB_USER) }}
+          DB_PASSWORD_LEN: ${{ length(secrets.DB_PASSWORD) }}
+          DB_NAME_LEN: ${{ length(secrets.DB_NAME) }}
       
       - name: Build and start containers
         run: docker compose up -d --build
