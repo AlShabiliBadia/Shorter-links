@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v6.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install testing dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build and start containers
+        run: docker compose up -d --build
+
+      - name: Wait for API to become ready
+        run: |
+          for i in {1..30}; do
+            if curl -s http://localhost:8000/docs > /dev/null; then
+              echo "API is up"
+              exit 0
+            fi
+            echo "Waiting for API..."
+            sleep 1
+          done
+          echo "API did not start in time"
+          docker compose logs
+          exit 1
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Shutdown containers
+        if: always()
+        run: docker compose down -v
