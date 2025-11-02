@@ -92,7 +92,7 @@ def test_get_stats_not_owner(base_url, created_link):
     }
 
     B_login_response = requests.post(f'{base_url}/users/login', json=B_login_payload)
-    B_headers = {"Authorization": f"Bearer {B_login_response.json()["access_token"]}"}
+    B_headers = {"Authorization": f"Bearer {B_login_response.json()['access_token']}"}
 
     response = requests.get(f"{base_url}/links/clicks/{A_short_code}", headers=B_headers)
 
