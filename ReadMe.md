@@ -90,15 +90,15 @@ Now, edit the .env file. You only need to set your POSTGRES*USER, POSTGRES_PASSW
 
 ```
 # For the FastAPI App (app service)
-DB_HOST=db
-DB_PORT=5432
-DB_USER=myuser
-DB_PASSWORD=mypassword
-DB_NAME=shorter_url
-# For the Postgres Container (db service)
-POSTGRES_USER=myuser
-POSTGRES_PASSWORD=mypassword
-POSTGRES_DB=shorter_url
+DB_HOST=<host>
+DB_PORT=<port>
+DB_USER=<user>
+DB_PASSWORD=<pass>
+DB_NAME=<name>
+
+SECRET_KEY=<key>
+ALGORITHM=<algo>
+ACCESS_TOKEN_EXPIRE_MINUTES=30
 ```
 
 **Build and run the containers:**
