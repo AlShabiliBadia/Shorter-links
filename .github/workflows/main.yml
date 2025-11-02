@@ -43,6 +43,16 @@ jobs:
           echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
           echo "ALGORITHM=${{ secrets.ALGORITHM }}" >> .env
           echo "ACCESS_TOKEN_EXPIRE_MINUTES=${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}" >> .env
+          
+      - name: Debug secrets
+        run: |
+          echo "DB_USER length: ${{ env.DB_USER_LEN }}"
+          echo "DB_PASSWORD length: ${{ env.DB_PASSWORD_LEN }}"
+          echo "DB_NAME length: ${{ env.DB_NAME_LEN }}"
+        env:
+          DB_USER_LEN: ${{ a.length(secrets.DB_USER) }}
+          DB_PASSWORD_LEN: ${{ a.length(secrets.DB_PASSWORD) }}
+          DB_NAME_LEN: ${{ a.length(secrets.DB_NAME) }}
       
       - name: Build and start containers
         run: docker compose up -d --build
