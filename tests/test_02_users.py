@@ -24,7 +24,7 @@ def test_user_signup_success(base_url):
     }
 
     teardown_response = requests.post(f'{base_url}/users/login', json=login_payload)
-    teardown_headers = {"Authorization": f"Bearer {teardown_response.json()["access_token"]}"}
+    teardown_headers = {"Authorization": f"Bearer {teardown_response.json()['access_token']}"}
 
     requests.delete(f'{base_url}/users/account/delete', headers=teardown_headers)
 
