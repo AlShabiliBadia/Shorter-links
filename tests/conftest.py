@@ -29,7 +29,7 @@ def authed_user(base_url):
     requests.post(f'{base_url}/users/signup', json=signup_payload)
 
     response = requests.post(f'{base_url}/users/login', json=login_payload)
-    auth_headers = {"Authorization": f"Bearer {response.json()["access_token"]}"}
+    auth_headers = {"Authorization": f"Bearer {response.json()['access_token']}"}
 
     yield {"username": "Tester", "email": email_address, "password": unique_pass, "auth_headers": auth_headers}
 
