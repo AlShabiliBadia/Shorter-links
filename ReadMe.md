@@ -6,7 +6,7 @@ It provides a robust API for creating and managing short links and includes a us
 ## Features
 
 - URL shortening for anonymous and authenticated users.
-- JWT-based user authentication (signup and login).
+- JWT-based user authentication (signup, login, and delete).
 - Redirection from short URLs to their original target URLs.
 - Race-condition-safe click tracking using atomic database operations.
 - Protected endpoint for link owners to view click statistics.
@@ -18,6 +18,7 @@ It provides a robust API for creating and managing short links and includes a us
 **Database:** PostgreSQL, SQLAlchemy (with Asyncio)  
 **Authentication:** Passlib, python-jose  
 **Data Validation:** Pydantic
+**Containerization:** Docker, Docker Compose
 
 ## Project Structure
 
@@ -51,6 +52,7 @@ The API is documented automatically using FastAPI's OpenAPI integration, availab
 | ------ | ------------- | --------------------------------- |
 | POST   | /users/signup | Register a new user account.      |
 | POST   | /users/login  | Log in to get a JWT access token. |
+| DELETE | /users/delete | (Protected) Delete your account.  |
 
 ### Link Management (`/links`)
 
@@ -64,8 +66,7 @@ The API is documented automatically using FastAPI's OpenAPI integration, availab
 
 ### Prerequisites
 
-- Python 3.8+
-- A running PostgreSQL database
+- Docker
 
 ### Installation
 
@@ -76,38 +77,45 @@ git clone https://github.com/AlShabiliBadia/Shorter-links.git
 cd Shorter-links
 ```
 
-**Create and activate a virtual environment:**
-
-```bash
-python -m venv venv
-source venv/bin/activate
-# On Windows, use
-venv\Scripts\activate
-```
-
-**Install dependencies:**
-
-```bash
-pip install -r requirements.txt
-```
-
 **Configure environment variables:**
-
-Create a `.env` file by copying the provided template, then edit it with your database details and secrets.
+Create a .env file by copying the provided template.
 
 ```bash
 cp .env.example .env
 ```
 
-**Run the server:**
+Now, edit the .env file. You only need to set your POSTGRES*USER, POSTGRES_PASSWORD, and POSTGRES_DB. Make sure to use the same values for both the DB*... and POSTGRES\_... variables.
+
+**Example .env:**
+
+```
+# For the FastAPI App (app service)
+DB_HOST=db
+DB_PORT=5432
+DB_USER=myuser
+DB_PASSWORD=mypassword
+DB_NAME=shorter_url
+# For the Postgres Container (db service)
+POSTGRES_USER=myuser
+POSTGRES_PASSWORD=mypassword
+POSTGRES_DB=shorter_url
+```
+
+**Build and run the containers:**
 
 ```bash
-uvicorn app.main:app --reload
+docker-compose up --build
 ```
 
 ---
 
 ## Changelog
+
+### [v1.4] - 2025-11-02 (Docker & Dependency Fixes)
+
+- Added full Docker and Docker Compose support for a simple, one-command setup.
+- Added a DELETE /users/delete endpoint for account deletion (primarily for test isolation).
+- Fixed and updated the get_current_user dependency for better robustness.
 
 ### [v1.3] - 2025-10-26 (Code Cleanup & Fixes)
 
@@ -119,9 +127,9 @@ uvicorn app.main:app --reload
 
 ### [v1.2] - 2025-10-15
 
-- **User Authentication:** Implemented a complete user system allowing users to sign up and log in with JWT-based authentication.
-- **Link Ownership:** Short links can now be associated with a user account.
+- Implemented a complete user system allowing users to sign up and log in with JWT-based authentication.
+- Short links can now be associated with a user account.
 
 ### [v1.0] - Initial Version
 
-- **Core Functionality:** Established the fundamental URL shortening and redirection service for anonymous users.
+- Established the fundamental URL shortening and redirection service for anonymous users.
