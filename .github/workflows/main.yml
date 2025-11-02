@@ -56,7 +56,10 @@ jobs:
       
       - name: Build and start containers
         run: docker compose up -d --build
-
+      
+      - name: Show db container logs on failure
+        if: failure()
+        run: docker compose logs db
 
       - name: Wait for API to become ready
         run: |
