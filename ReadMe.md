@@ -133,3 +133,4 @@ docker-compose up --build
 ### [v1.0] - Initial Version
 
 - Established the fundamental URL shortening and redirection service for anonymous users.
+  .
