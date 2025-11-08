@@ -1,4 +1,4 @@
-# FastAPI URL Shortener (v1.3)
+# FastAPI URL Shortener
 
 A URL shortening service built with Python. This project uses the FastAPI framework and communicates with a PostgreSQL database asynchronously.  
 It provides a robust API for creating and managing short links and includes a user authentication system using JWT, atomic click tracking, and a clean, modular project structure.
